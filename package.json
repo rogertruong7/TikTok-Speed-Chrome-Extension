@@ -1,5 +1,11 @@
 {
+  "name": "tiktok",
+  "version": "1.0.0",
+  "type": "module",
   "dependencies": {
-    "lint": "^0.8.19"
+    "@types/chrome": "^0.0.268",
+    "bootstrap": "^5.3.3",
+    "lint": "^0.8.19",
+    "mutation": "^0.0.1"
   }
 }

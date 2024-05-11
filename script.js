@@ -1,4 +1,6 @@
-devLog("Script started for extension");
+
+
+console.log("Script started for extension");
 
 /** @type {HTMLVideoElement} */
 let VIDEO = null;
@@ -6,9 +8,9 @@ let LISTENING_KEYS = false;
 let isKeyPressed = false;
 
 function setSpeed(video, speed) {
-  log("setSpeed started: " + speed, 5);
+  console.log("setSpeed started: " + speed, 5);
   video.playbackRate = Number(speed);
-  log("setSpeed finished: " + speed, 5);
+  console.log("setSpeed finished: " + speed, 5);
 }
 
 chrome.storage.sync
@@ -43,7 +45,6 @@ chrome.storage.sync
     });
 
     function checkPage() {
-
       if (!isTikTokPage()) {
         return;
       }
@@ -56,7 +57,8 @@ chrome.storage.sync
 
       if (video.hasAttribute("playbackRate")) {
         const playbackRate = parseFloat(video.getAttribute("playbackRate"));
-        if ((playbackRate >= 2.0)) return devLog("video is already 2.0x speed");
+        if (playbackRate >= 2.0)
+          return console.log("video is already 2.0x speed");
 
         VIDEO = video;
 
@@ -83,8 +85,8 @@ chrome.storage.sync
             if (isMousePressed) {
               setSpeed(video, 2.0);
             } else {
-							setSpeed(video, 1.0);
-						}
+              setSpeed(video, 1.0);
+            }
             requestAnimationFrame(checkMousePressed); // Continuously check
           }
 

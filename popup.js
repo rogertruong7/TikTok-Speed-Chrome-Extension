@@ -2,11 +2,7 @@
 const enabledStateText = document.querySelector("#enabled_text");
 const enabledCheckBox = document.querySelector("#enabled");
 
-function updateText() {
-  enabledStateText.textContent = enabledCheckBox.checked
-    ? "Enabled"
-    : "Disabled";
-}
+
 
 // Load options values.
 chrome.storage.sync.get({
@@ -23,5 +19,11 @@ enabledCheckBox.addEventListener("change", () => {
   chrome.storage.sync.set({ enabled: enabledCheckBox.checked });
   updateText();
 });
+
+function updateText() {
+  enabledStateText.textContent = enabledCheckBox.checked
+    ? "Enabled"
+    : "Disabled";
+}
 
 // update enabled/disabled text.
