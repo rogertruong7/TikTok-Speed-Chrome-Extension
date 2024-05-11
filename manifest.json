@@ -8,7 +8,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.tiktok.com/*"],
-      "css": ["content_script.css"],
+      "css": ["po.css"],
       "js": [
         "script.js",
         "popup.js"
