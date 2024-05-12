@@ -7,8 +7,8 @@ let isMousePressed = false;
 let mouseDownTime = 0;
 
 function setSpeed(speed) {
+  // Changes the speed of the video
   VIDEO.playbackRate = speed;
-  console.log("vid " + VIDEO.src + " vid setSpeed " + VIDEO.playbackRate);
 }
 
 chrome.storage.sync
@@ -16,34 +16,38 @@ chrome.storage.sync
     enabled: true,
   })
   .then((items) => {
-    console.log(items.enabled);
+    // Checking if current website is on TikTok
     const isTikTokPage = () => {
       return location.href.includes("https://www.tiktok.com/");
     };
 
+    // Checking if while we are on the website if our extension is enabled/disabled
     chrome.storage.sync.onChanged.addListener((changes) => {
-      // update items.
+      // Updating items.
       for (const key in changes) {
         items[key] = changes[key].newValue;
       }
-
       if (changes["enabled"]) {
         checkPage();
       }
     });
 
+    // Mutation Summary Observer class which looks for the element on the page
+    // In this case it looks for video type in html and if it is found it runs checkPage()
     observer.watchElements([
       {
         elements: ["video"],
         onElement: (element) => {
           checkPage();
-          console.log("Found element");
         },
       },
     ]);
 
+    // We run checkPage() just in case observer or the next thing doesn't pick it up
     checkPage();
 
+    // This checks if the url changes and runs checkpage 2 seconds after
+    // This is to ensure the extension runs even if the observer fails
     chrome.runtime.onMessage.addListener((message) => {
       if (message?.type !== "url update") {
         return;
@@ -53,29 +57,33 @@ chrome.storage.sync
       }, 2000);
     });
 
+    // Main function which checks the page for TikTok video
     function checkPage() {
+      // If it's not a TikTok page return
       if (!isTikTokPage()) {
         return;
       }
-
+      // If we have the extension disabled return
       if (!items.enabled) return;
 
+      // Find the video with the html if that starts with xgwrapper
+      // This is because all videos on the TikTok browser starts in a div with this id
       const video = document.querySelector('[id^="xgwrapper"] video');
 
-      if (!video) return;
-      if (video) {
-        const src = video.src;
-        console.log("Found element video" + src);
-
-        console.log("Video has playbackrate");
-
+      // If there is no video return
+      if (!video) {
+        return;
+      } else {
         const playbackRate = video.playbackRate;
-        console.log(playbackRate);
-        if (playbackRate >= 2.0)
-          return console.log("video is already 2.0x speed");
+        if (playbackRate >= 2.0) {
+          console.log("Video is already 2.0x speed");
+          return;
+        }
 
+        // Set the VIDEO variable declared above to the video
         VIDEO = video;
 
+        // Listening keys ensures it only listens again after the listening is done
         if (!LISTENING_KEYS) {
           LISTENING_KEYS = true;
           document.addEventListener("mousedown", (event) => {
@@ -83,7 +91,7 @@ chrome.storage.sync
               // Check if left mouse button is clicked
               isMousePressed = true;
               mouseDownTime = Date.now();
-              // Your code to handle the mouse button being held down
+              // Take note of the time the mouse was pressed
             }
           });
 
@@ -92,23 +100,24 @@ chrome.storage.sync
               // Check if left mouse button is released
               isMousePressed = false;
               mouseDownTime = 0;
-              // Your code to handle the mouse button being released
+              // Resets the time the mouse was pressed to 0
             }
           });
 
-          // Continuously check if the mouse button is being held down
+          // This function ontinuously checks if the mouse button is being held down
           function checkMousePressed() {
             if (isMousePressed) {
               const currentTime = Date.now();
               if (currentTime - mouseDownTime >= 500) {
+                // This is done so that we change the speed only if the mouse is held for longer than 0.5 seconds
                 setSpeed(2);
               }
             } else {
+              // Otherwise we set the speed back to 1
               setSpeed(1);
             }
-            requestAnimationFrame(checkMousePressed); // Continuously check
+            requestAnimationFrame(checkMousePressed); // Continuously run this function because we need to know if the mouse is pressed
           }
-
           checkMousePressed();
         }
       }
