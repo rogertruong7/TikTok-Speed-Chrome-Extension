@@ -94,28 +94,28 @@ chrome.storage.sync
               // Take note of the time the mouse was pressed
             }
           });
-          
+
           document.addEventListener("mouseup", (event) => {
             if (event.button === 0) {
               // Check if left mouse button is released
               isMousePressed = false;
               mouseDownTime = 0;
-              if (video.parentNode.contains(img)) {
-                video.parentNode.removeChild(img);
+              if (VIDEO.parentNode.contains(img)) {
+                VIDEO.parentNode.removeChild(img);
               }
-              
+
               // Resets the time the mouse was pressed to 0
             }
           });
 
           // This function ontinuously checks if the mouse button is being held down
           function checkMousePressed() {
-            
             if (isMousePressed) {
               const currentTime = Date.now();
               if (currentTime - mouseDownTime >= 500) {
-                if (!video.paused) {
-                  // This is done so that we change the speed only if the mouse is held for longer than 0.5 seconds
+                // This is done so that we change the speed only if the mouse is held for longer than 0.5 seconds
+                setSpeed(2);
+                if (!VIDEO.paused) {
                   img.src = "https://i.imgur.com/XfFCalr.png";
                   img.style.position = "absolute"; // Position it absolutely
                   img.style.zIndex = "9999"; // Set a high z-index to ensure it appears above other content
@@ -123,18 +123,11 @@ chrome.storage.sync
                   img.style.bottom = "-1%"; // Align to the bottom
                   img.style.height = "10%";
                   img.style.transform = "translateX(-50%)"; // Adjust for centering
+                  VIDEO.parentNode.appendChild(img);
                 }
-
-                
-                
-                
-                video.parentNode.appendChild(img);
-                setSpeed(2);
               }
             } else {
               // Otherwise we set the speed back to 1
-              // img.remove();
-              
               setSpeed(1);
             }
             requestAnimationFrame(checkMousePressed); // Continuously run this function because we need to know if the mouse is pressed
