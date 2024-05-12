@@ -5,17 +5,28 @@
   "description": "Hold down on the sides of a tiktok video to increase speed",
   "permissions": ["storage", "scripting"],
   "host_permissions": ["*://*.tiktok.com/*"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "matches": ["*://*.tiktok.com/*"],
-      "js": ["libs/mutation_summary.js", "script.js", "popup.js", "observer.js"]
+      "js": [
+        "libs/mutation_summary.js",
+        "js/observer.js",
+        "js/script.js"
+      ]
     }
   ],
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "TikTok 2x Speed Option"
+    "default_popup": "html/popup.html",
+    "default_title": "TikTok 2x Speed Option",
+    "default_icon": {
+      "16": "images/icons/normal/icon-16.png",
+      "48": "images/icons/normal/icon-48.png",
+      "32": "images/icons/normal/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icons/normal/icon-16.png",
+    "48": "images/icons/normal/icon-48.png",
+    "128": "images/icons/normal/icon-128.png"
   }
 }
