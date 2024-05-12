@@ -5,7 +5,7 @@ let VIDEO = null;
 let LISTENING_KEYS = false;
 let isMousePressed = false;
 let mouseDownTime = 0;
-
+const img = document.createElement("img");
 function setSpeed(speed) {
   // Changes the speed of the video
   VIDEO.playbackRate = speed;
@@ -86,7 +86,7 @@ chrome.storage.sync
         // Listening keys ensures it only listens again after the listening is done
         if (!LISTENING_KEYS) {
           LISTENING_KEYS = true;
-          document.addEventListener("mousedown", (event) => {
+          video.addEventListener("mousedown", (event) => {
             if (event.button === 0) {
               // Check if left mouse button is clicked
               isMousePressed = true;
@@ -94,26 +94,47 @@ chrome.storage.sync
               // Take note of the time the mouse was pressed
             }
           });
-
+          
           document.addEventListener("mouseup", (event) => {
             if (event.button === 0) {
               // Check if left mouse button is released
               isMousePressed = false;
               mouseDownTime = 0;
+              if (video.parentNode.contains(img)) {
+                video.parentNode.removeChild(img);
+              }
+              
               // Resets the time the mouse was pressed to 0
             }
           });
 
           // This function ontinuously checks if the mouse button is being held down
           function checkMousePressed() {
+            
             if (isMousePressed) {
               const currentTime = Date.now();
               if (currentTime - mouseDownTime >= 500) {
-                // This is done so that we change the speed only if the mouse is held for longer than 0.5 seconds
+                if (!video.paused) {
+                  // This is done so that we change the speed only if the mouse is held for longer than 0.5 seconds
+                  img.src = "https://i.imgur.com/XfFCalr.png";
+                  img.style.position = "absolute"; // Position it absolutely
+                  img.style.zIndex = "9999"; // Set a high z-index to ensure it appears above other content
+                  img.style.left = "50%"; // Center horizontally
+                  img.style.bottom = "-1%"; // Align to the bottom
+                  img.style.height = "10%";
+                  img.style.transform = "translateX(-50%)"; // Adjust for centering
+                }
+
+                
+                
+                
+                video.parentNode.appendChild(img);
                 setSpeed(2);
               }
             } else {
               // Otherwise we set the speed back to 1
+              // img.remove();
+              
               setSpeed(1);
             }
             requestAnimationFrame(checkMousePressed); // Continuously run this function because we need to know if the mouse is pressed
