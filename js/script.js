@@ -1,16 +1,14 @@
-
-
 console.log("Script started for extension");
 
 /** @type {HTMLVideoElement} */
 let VIDEO = null;
 let LISTENING_KEYS = false;
-let isKeyPressed = false;
+let isMousePressed = false;
+let mouseDownTime = 0;
 
-function setSpeed(video, speed) {
-  console.log("setSpeed started: " + speed, 5);
-  video.playbackRate = Number(speed);
-  console.log("setSpeed finished: " + speed, 5);
+function setSpeed(speed) {
+  VIDEO.playbackRate = speed;
+  console.log("vid " + VIDEO.src + " vid setSpeed " + VIDEO.playbackRate);
 }
 
 chrome.storage.sync
@@ -18,30 +16,41 @@ chrome.storage.sync
     enabled: true,
   })
   .then((items) => {
+    console.log(items.enabled);
     const isTikTokPage = () => {
       return location.href.includes("https://www.tiktok.com/");
     };
 
+    chrome.storage.sync.onChanged.addListener((changes) => {
+      // update items.
+      for (const key in changes) {
+        items[key] = changes[key].newValue;
+      }
+
+      if (changes["enabled"]) {
+        checkPage();
+      }
+    });
+
     observer.watchElements([
       {
-        elements: [".tiktok-web-player no-controls"],
+        elements: ["video"],
         onElement: (element) => {
           checkPage();
+          console.log("Found element");
         },
       },
     ]);
 
-    // the current page that the script was inject could be a shorts page, so let's check it.
     checkPage();
 
     chrome.runtime.onMessage.addListener((message) => {
-      if (message?.type !== "url update") return;
-      // the url of the page changed, let's check if there's any youtube shorts.
-      // this is in case the observer fail on us.
-
+      if (message?.type !== "url update") {
+        return;
+      }
       setTimeout(() => {
         checkPage();
-      }, 5000);
+      }, 2000);
     });
 
     function checkPage() {
@@ -49,14 +58,19 @@ chrome.storage.sync
         return;
       }
 
-      const video = document.querySelector(
-        ".tiktok-web-player no-controls video"
-      );
+      if (!items.enabled) return;
+
+      const video = document.querySelector('[id^="xgwrapper"] video');
 
       if (!video) return;
+      if (video) {
+        const src = video.src;
+        console.log("Found element video" + src);
 
-      if (video.hasAttribute("playbackRate")) {
-        const playbackRate = parseFloat(video.getAttribute("playbackRate"));
+        console.log("Video has playbackrate");
+
+        const playbackRate = video.playbackRate;
+        console.log(playbackRate);
         if (playbackRate >= 2.0)
           return console.log("video is already 2.0x speed");
 
@@ -68,6 +82,7 @@ chrome.storage.sync
             if (event.button === 0) {
               // Check if left mouse button is clicked
               isMousePressed = true;
+              mouseDownTime = Date.now();
               // Your code to handle the mouse button being held down
             }
           });
@@ -76,6 +91,7 @@ chrome.storage.sync
             if (event.button === 0) {
               // Check if left mouse button is released
               isMousePressed = false;
+              mouseDownTime = 0;
               // Your code to handle the mouse button being released
             }
           });
@@ -83,9 +99,12 @@ chrome.storage.sync
           // Continuously check if the mouse button is being held down
           function checkMousePressed() {
             if (isMousePressed) {
-              setSpeed(video, 2.0);
+              const currentTime = Date.now();
+              if (currentTime - mouseDownTime >= 500) {
+                setSpeed(2);
+              }
             } else {
-              setSpeed(video, 1.0);
+              setSpeed(1);
             }
             requestAnimationFrame(checkMousePressed); // Continuously check
           }

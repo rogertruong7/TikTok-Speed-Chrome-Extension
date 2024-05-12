@@ -82,3 +82,4 @@ class Observer {
   }
 }
 
+const observer = new Observer();
