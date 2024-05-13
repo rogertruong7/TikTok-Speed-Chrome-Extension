@@ -5,7 +5,7 @@ let VIDEO = null;
 let LISTENING_KEYS = false;
 let isMousePressed = false;
 let mouseDownTime = 0;
-const img = document.createElement("img");
+let img = document.createElement("img");
 function setSpeed(speed) {
   // Changes the speed of the video
   VIDEO.playbackRate = speed;
@@ -71,9 +71,8 @@ chrome.storage.sync
       const video = document.querySelector('[id^="xgwrapper"] video');
 
       // If there is no video return
-      if (!video) {
-        return;
-      } else {
+      if (!video) return;
+      if (video) {
         const playbackRate = video.playbackRate;
         if (playbackRate >= 2.0) {
           console.log("Video is already 2.0x speed");
@@ -86,12 +85,26 @@ chrome.storage.sync
         // Listening keys ensures it only listens again after the listening is done
         if (!LISTENING_KEYS) {
           LISTENING_KEYS = true;
-          video.addEventListener("mousedown", (event) => {
-            if (event.button === 0) {
-              // Check if left mouse button is clicked
-              isMousePressed = true;
-              mouseDownTime = Date.now();
-              // Take note of the time the mouse was pressed
+
+          document.addEventListener("mousedown", (event) => {
+            // get the positions of the video
+            const rect = VIDEO.getBoundingClientRect();
+            // get the position of the mouse cursor
+            let mouseX = event.clientX;
+            let mouseY = event.clientY;
+            console.log(mouseX + " " + mouseY);
+            // If the mouse is within the rectangle
+            if (
+              mouseX >= rect.left &&
+              mouseX <= rect.right &&
+              mouseY >= rect.top &&
+              mouseY <= rect.bottom
+            ) {
+              if (event.button === 0) {
+                // Check if left mouse button is clicked
+                isMousePressed = true;
+                mouseDownTime = Date.now();
+              }
             }
           });
 
@@ -103,7 +116,6 @@ chrome.storage.sync
               if (VIDEO.parentNode.contains(img)) {
                 VIDEO.parentNode.removeChild(img);
               }
-
               // Resets the time the mouse was pressed to 0
             }
           });
@@ -112,7 +124,7 @@ chrome.storage.sync
           function checkMousePressed() {
             if (isMousePressed) {
               const currentTime = Date.now();
-              if (currentTime - mouseDownTime >= 500) {
+              if (currentTime - mouseDownTime >= 300) {
                 // This is done so that we change the speed only if the mouse is held for longer than 0.5 seconds
                 setSpeed(2);
                 if (!VIDEO.paused) {
