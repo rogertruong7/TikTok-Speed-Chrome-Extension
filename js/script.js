@@ -113,7 +113,7 @@ chrome.storage.sync
               // Check if left mouse button is released
               isMousePressed = false;
               mouseDownTime = 0;
-              if (VIDEO.parentNode.contains(img)) {
+              if (VIDEO != null && VIDEO.parentNode.contains(img)) {
                 VIDEO.parentNode.removeChild(img);
               }
               // Resets the time the mouse was pressed to 0
