@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "description": "Hold down your mouse click on a TikTok video on the browser to increase it's speed by 2.0x.",
-  "permissions": ["storage", "scripting"],
+  "permissions": ["storage"],
   "host_permissions": ["*://*.tiktok.com/*"],
   "content_scripts": [
     {
