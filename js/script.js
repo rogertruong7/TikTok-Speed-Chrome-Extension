@@ -68,7 +68,7 @@ chrome.storage.sync
 
       // Find the video with the html if that starts with xgwrapper
       // This is because all videos on the TikTok browser starts in a div with this id
-      const video = document.querySelector('[id^="xgwrapper"] video');
+      const video = document.querySelector('video[data-xgplayerid]');
 
       // If there is no video return
       if (!video) return;
@@ -92,7 +92,6 @@ chrome.storage.sync
             // get the position of the mouse cursor
             let mouseX = event.clientX;
             let mouseY = event.clientY;
-            console.log(mouseX + " " + mouseY);
             // If the mouse is within the rectangle
             if (
               mouseX >= rect.left &&
@@ -140,6 +139,7 @@ chrome.storage.sync
               }
             } else {
               // Otherwise we set the speed back to 1
+            
               setSpeed(1);
             }
             requestAnimationFrame(checkMousePressed); // Continuously run this function because we need to know if the mouse is pressed

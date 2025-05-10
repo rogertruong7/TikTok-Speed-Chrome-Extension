@@ -1,6 +1,6 @@
 {
   "name": "TikTok 2x Speed Option",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "manifest_version": 3,
   "description": "Hold down your mouse click on a TikTok video on the browser to increase it's speed by 2.0x.",
   "permissions": ["storage"],
