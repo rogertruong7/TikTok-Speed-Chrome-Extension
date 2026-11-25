@@ -1,33 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="dark" />
+    <title>Hold to Speed Up</title>
+    <link rel="stylesheet" href="../css/popup.css" />
+  </head>
+  <body>
+    <header>
+      <img src="../images/icons/icon-48.png" alt="" width="32" height="32" />
+      <div>
+        <h1>Hold to Speed Up</h1>
+        <p class="sub">Hold on a video to speed it up</p>
+      </div>
+      <label class="switch" title="On everywhere">
+        <input type="checkbox" id="enabled" aria-label="On everywhere" checked />
+        <i></i>
+      </label>
+    </header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title >TikTok Extension</title>
-    <link rel="stylesheet" href="../css/popup.css">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Brawler&family=DM+Serif+Display&family=Lato&family=Lexend+Deca:wght@300&family=Marcellus&family=Nova+Square&family=Passion+One&family=Righteous&family=Sora:wght@300;400&display=swap"
-      rel="stylesheet"
-    />
-</head>
-<body>
-    <h2>TikTok Speed Changer</h2>
-    <div id="description">
-        The extension runs like the mobile app! Just hold your mouse button over the TikTok video and it will run at 2.0x speed! Thanks for supporting!
-    </div>
-    <div class="option-container collumn">
-        <label id="enabled_text" for="enabled">
-            Enabled
-        </label>
-        <label class="switch">
-            <input id="enabled" type="checkbox" checked>
-            <span class="slider round"></span>
-        </label>
+    <main>
+      <section>
+        <h2>Speed while holding</h2>
+        <div class="segments" id="speed" role="radiogroup" aria-label="Speed while holding"></div>
+      </section>
 
-    </div>
+      <section>
+        <h2>Hold key</h2>
+        <div class="row">
+          <span>Hold a key instead of the mouse</span>
+          <button type="button" class="key empty" id="holdKey" aria-describedby="keyHint">Set key</button>
+        </div>
+        <p class="hint" id="keyHint">Click, then press any key. Esc cancels, Backspace clears.</p>
+      </section>
+
+      <section id="siteSection">
+        <div class="row" id="siteRow">
+          <span class="site">On for <b id="siteName">this site</b></span>
+          <label class="switch">
+            <input type="checkbox" id="site" aria-label="On for this site" checked />
+            <i></i>
+          </label>
+        </div>
+        <p class="hint" id="siteNote" hidden></p>
+      </section>
+    </main>
+
+    <footer>
+      <span>On/off shortcut <kbd id="shortcut">Alt+Shift+S</kbd></span>
+      <a href="#" id="editShortcut">Change</a>
+    </footer>
     <script src="../js/popup.js"></script>
-</body>
-
+  </body>
 </html>
