@@ -1,32 +1,52 @@
 {
-  "name": "TikTok 2x Speed Option",
-  "version": "1.0.1",
   "manifest_version": 3,
-  "description": "Hold down your mouse click on a TikTok video on the browser to increase it's speed by 2.0x.",
-  "permissions": ["storage"],
-  "host_permissions": ["*://*.tiktok.com/*"],
+  "name": "Hold to Speed Up for TikTok - 2x Video Speed",
+  "short_name": "Hold to Speed Up",
+  "version": "2.0.0",
+  "description": "Hold on a TikTok video to play it at 2x, like the mobile app. Let go and it keeps playing. Pick 1.5x to 3x or set a hold key.",
+  "permissions": [
+    "storage"
+  ],
   "content_scripts": [
     {
-      "matches": ["*://*.tiktok.com/*"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "*://*.youtube.com/*",
+        "*://*.instagram.com/*"
+      ],
       "js": [
-        "libs/mutation_summary.js",
-        "js/observer.js",
-        "js/script.js"
-      ]
+        "js/content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
   "action": {
     "default_popup": "html/popup.html",
-    "default_title": "TikTok 2x Speed Option",
+    "default_title": "Hold to Speed Up",
     "default_icon": {
-      "16": "images/icons/normal/icon-16.png",
-      "48": "images/icons/normal/icon-48.png",
-      "32": "images/icons/normal/icon-128.png"
+      "16": "images/icons/icon-16.png",
+      "32": "images/icons/icon-32.png",
+      "48": "images/icons/icon-48.png"
     }
   },
   "icons": {
-    "16": "images/icons/normal/icon-16.png",
-    "48": "images/icons/normal/icon-48.png",
-    "128": "images/icons/normal/icon-128.png"
+    "16": "images/icons/icon-16.png",
+    "32": "images/icons/icon-32.png",
+    "48": "images/icons/icon-48.png",
+    "128": "images/icons/icon-128.png"
+  },
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "commands": {
+    "toggle-enabled": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Turn Hold to Speed Up on or off"
+    }
   }
 }
